@@ -8,6 +8,19 @@
 - 
 ## Warm-up
 ## Word
-## Story
+- Word-frequency & Word cloud
+- Wordle
 ## Grammar
+- Role playing
+## Story
+- TTS(whole)
+- TTS(line by line)
 ## Wrap-up
+- Quiz
+## Further Activities
+- Dictionary
+- Word meaning Quiz
+- Grammar Quiz(word ordering)
+- TTS line by line
+- Shadowing
+- Irregular verb practices 
