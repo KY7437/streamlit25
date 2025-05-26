@@ -1,0 +1,6 @@
+from gtts import gTTS
+
+# Test text-to-speech
+text = "This is a test."
+tts = gTTS(text, lang='en')
+tts.save("test.mp3")
