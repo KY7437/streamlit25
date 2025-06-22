@@ -35,7 +35,7 @@ for i, word in enumerate(words):
         answer_words.append(stripped)
         user_input = st.text_input(f"Word for blank {len(answer_words)}", key=f"blank_{i}")
         user_answers.append(user_input.strip())
-        processed_words.append(f"**_{user_input}_**{suffix}")
+        processed_words.append(f"__({len(answer_words)})__{suffix}")
     else:
         processed_words.append(word)
 
@@ -54,4 +54,3 @@ if st.button("Submit"):
     # Calculate and display the score
     score = sum([correct.lower() == user.lower() for correct, user in zip(answer_words, user_answers)])
     st.success(f"Correct Answers: {score} / {len(answer_words)}")
-
