@@ -28,32 +28,29 @@ answer_words = []
 user_inputs = {}
 
 st.write("### Passage with Blanks:")
-# Create a container for the text with blanks
-with st.form(key='my_form'):
-    for i, word in enumerate(words):
-        if i in blank_indices:
-            stripped = word.strip(".,!?;:")
-            suffix = word[len(stripped):]
-            answer_words.append(stripped)
-            # Create a text input for each blank
-            user_input = st.text_input("", key=f"blank_{i}", max_chars=len(stripped))
-            user_inputs[i] = user_input.strip()
-            st.write(f"**{user_input}{suffix}** ", end="")
-        else:
-            st.write(f"{word} ", end="")
 
-    # Submit button
-    submit_button = st.form_submit_button(label='Submit')
+# Display text with blanks and input fields
+for i, word in enumerate(words):
+    if i in blank_indices:
+        stripped = word.strip(".,!?;:")
+        suffix = word[len(stripped):]
+        answer_words.append(stripped)
+        # Create a text input for each blank
+        user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}", max_chars=len(stripped), label_visibility="collapsed")
+        user_inputs[i] = user_input.strip()
+        st.write(f"**{user_input}**{suffix} ", end="")
+    else:
+        st.write(f"{word} ", end="")
 
 # Check answers when user submits
-if submit_button:
+if st.button("Submit"):
     st.subheader("Check Your Answers")
     for idx, (i, correct) in enumerate(zip(blank_indices, answer_words)):
         user = user_inputs.get(i, "")
         if correct.lower() == user.lower():
-            st.markdown(f"✅ **{idx+1}. {user}** (Correct)")
+            st.markdown(f"✅ **Blank {idx+1} ({user})** (Correct)")
         else:
-            st.markdown(f"❌ **{idx+1}. {user}** → Correct answer: **{correct}**")
+            st.markdown(f"❌ **Blank {idx+1} ({user})** → Correct answer: **{correct}**")
 
     # Calculate and display the score
     score = sum([correct.lower() == user_inputs[i].lower() for i, correct in zip(blank_indices, answer_words)])
