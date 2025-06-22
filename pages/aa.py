@@ -36,9 +36,9 @@ for i, word in enumerate(words):
         suffix = word[len(stripped):]
         answer_words.append(stripped)
         # Create a text input for each blank
-        user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}", max_chars=len(stripped), label_visibility="collapsed")
+        user_input = st.text_input("", key=f"blank_{i}", max_chars=len(stripped))
         user_inputs[i] = user_input.strip()
-        processed_text += f" **{user_input}**{suffix}"
+        processed_text += f" {user_input}{suffix}"
     else:
         processed_text += f" {word}"
 
