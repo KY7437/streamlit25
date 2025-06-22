@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.title("Memorization of the Text")
-st.write("Fill in the blanks directly in the passage. If you don't know the word, leave it empty.")
+st.write("Fill in the blanks directly in the passage below. If you don't know the word, leave it empty.")
 
 # Text passage
 text = """In the small town of Willowby, there stood an old library that was rumored to be enchanted. Every night at midnight, the books inside would whisper stories to each other, bringing their characters to life. One evening, Sarah, a curious 15-year-old book lover, decided to sneak into the library to see if the rumors were true.
@@ -27,22 +27,23 @@ blank_indices = sorted(random.sample(range(len(words)), num_blanks))
 answer_words = []
 user_inputs = {}
 
-# Display text with blanks and input fields
-processed_text = []
+# Create a container for the text with blanks
+st.write("### Passage with Blanks:")
+processed_text = ""
 for i, word in enumerate(words):
     if i in blank_indices:
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        # Use a unique key for each input field
+        # Create a text input for each blank
         user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}", max_chars=len(stripped), label_visibility="collapsed")
         user_inputs[i] = user_input.strip()
-        processed_text.append(f"**{user_input}**{suffix}")
+        processed_text += f" **{user_input}**{suffix}"
     else:
-        processed_text.append(word)
+        processed_text += f" {word}"
 
-# Join the processed words back into a full text and display it
-st.markdown(" ".join(processed_text))
+# Display the processed text
+st.markdown(processed_text)
 
 # Check answers when user submits
 if st.button("Submit"):
