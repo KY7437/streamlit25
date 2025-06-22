@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.title("Memorization of the Text")
-st.write("There are one or two blanks for each sentence. Fill in the blank. If you don't know the word, please enter comma(,) twice.")
+st.write("Fill in the blanks directly in the passage. If you don't know the word, please leave it empty.")
 
 # Text passage
 text = """In the small town of Willowby, there stood an old library that was rumored to be enchanted. Every night at midnight, the books inside would whisper stories to each other, bringing their characters to life. One evening, Sarah, a curious 15-year-old book lover, decided to sneak into the library to see if the rumors were true.
@@ -31,18 +31,18 @@ for i, word in enumerate(words):
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        blank = "_____"
+        blank = f"<input id='blank_{i}' style='width: 100px;' type='text'/>"
         processed_words.append(f"{blank}{suffix}")
     else:
         processed_words.append(word)
 
-# Display text with blanks
-st.markdown(" ".join(processed_words))
+# Display text with blanks using HTML
+st.markdown(" ".join(processed_words), unsafe_allow_html=True)
 
 # Collect user input for each blank
 user_answers = []
-for idx, blank_index in enumerate(blank_indices):
-    user_input = st.text_input(f"Enter word for blank {idx + 1}", key=f"blank_{idx}")
+for i in blank_indices:
+    user_input = st.text_input(f"Word for position {i + 1}", key=f"blank_input_{i}")
     user_answers.append(user_input.strip())
 
 # Check answers when user submits
