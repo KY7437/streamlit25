@@ -29,21 +29,21 @@ user_inputs = {}
 
 # Create a container for the text with blanks
 st.write("### Passage with Blanks:")
-processed_text = ""
+processed_text = []
 for i, word in enumerate(words):
     if i in blank_indices:
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
         # Create a text input for each blank
-        user_input = st.text_input("", key=f"blank_{i}", max_chars=len(stripped))
+        user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}", max_chars=len(stripped), label_visibility="collapsed")
         user_inputs[i] = user_input.strip()
-        processed_text += f" {user_input}{suffix}"
+        processed_text.append(f"**{user_input}**{suffix}")
     else:
-        processed_text += f" {word}"
+        processed_text.append(word)
 
-# Display the processed text
-st.markdown(processed_text)
+# Join the processed words back into a full text and display it
+st.markdown(" ".join(processed_text))
 
 # Check answers when user submits
 if st.button("Submit"):
