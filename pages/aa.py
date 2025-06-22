@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.title("Memorization of the Text")
-st.write("Fill in the blanks directly in the passage below. If you don't know the word, leave it empty.")
+st.write("Fill in the blanks directly in the passage. If you don't know the word, leave it empty.")
 
 # Text passage
 text = """In the small town of Willowby, there stood an old library that was rumored to be enchanted. Every night at midnight, the books inside would whisper stories to each other, bringing their characters to life. One evening, Sarah, a curious 15-year-old book lover, decided to sneak into the library to see if the rumors were true.
@@ -25,35 +25,36 @@ blank_indices = sorted(random.sample(range(len(words)), num_blanks))
 
 # Process words to create blanks and collect user inputs
 answer_words = []
-processed_words = []
 user_inputs = {}
 
-for i, word in enumerate(words):
-    if i in blank_indices:
-        stripped = word.strip(".,!?;:")
-        suffix = word[len(stripped):]
-        answer_words.append(stripped)
-        # Create a text input for each blank
-        user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}")
-        user_inputs[i] = user_input.strip()
-        processed_words.append(f"({len(answer_words)}){suffix}")
-    else:
-        processed_words.append(word)
+st.write("### Passage with Blanks:")
+# Create a container for the text with blanks
+with st.form(key='my_form'):
+    for i, word in enumerate(words):
+        if i in blank_indices:
+            stripped = word.strip(".,!?;:")
+            suffix = word[len(stripped):]
+            answer_words.append(stripped)
+            # Create a text input for each blank
+            user_input = st.text_input("", key=f"blank_{i}", max_chars=len(stripped))
+            user_inputs[i] = user_input.strip()
+            st.write(f"**{user_input}{suffix}** ", end="")
+        else:
+            st.write(f"{word} ", end="")
 
-# Display the text with placeholders
-st.markdown(" ".join(processed_words))
+    # Submit button
+    submit_button = st.form_submit_button(label='Submit')
 
 # Check answers when user submits
-if st.button("Submit"):
+if submit_button:
     st.subheader("Check Your Answers")
     for idx, (i, correct) in enumerate(zip(blank_indices, answer_words)):
         user = user_inputs.get(i, "")
         if correct.lower() == user.lower():
-            st.markdown(f"✅ **Blank {idx+1} ({user})** (Correct)")
+            st.markdown(f"✅ **{idx+1}. {user}** (Correct)")
         else:
-            st.markdown(f"❌ **Blank {idx+1} ({user})** → Correct answer: **{correct}**")
+            st.markdown(f"❌ **{idx+1}. {user}** → Correct answer: **{correct}**")
 
     # Calculate and display the score
     score = sum([correct.lower() == user_inputs[i].lower() for i, correct in zip(blank_indices, answer_words)])
     st.success(f"Correct Answers: {score} / {len(answer_words)}")
-
