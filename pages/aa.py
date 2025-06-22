@@ -1,7 +1,7 @@
 import random
 import streamlit as st
 
-with tab2:
+
     st.title("Memorization of the Text")
     st.write("There are one or two blanks for each sentence. Select the correct word from the given options.")
 
