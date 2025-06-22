@@ -31,7 +31,7 @@ for i, word in enumerate(words):
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        blank = f"<input id='blank_{i}' style='width: 100px;' type='text'/>"
+        blank = f"<input id='blank_{i}' style='width: 100px; padding: 2px; margin: 0 2px; border: 1px solid #ccc; border-radius: 4px;' type='text'/>"
         processed_words.append(f"{blank}{suffix}")
     else:
         processed_words.append(word)
