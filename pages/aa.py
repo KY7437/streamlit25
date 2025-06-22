@@ -27,20 +27,22 @@ blank_indices = sorted(random.sample(range(len(words)), num_blanks))
 answer_words = []
 user_inputs = {}
 
-st.write("### Passage with Blanks:")
-
 # Display text with blanks and input fields
+processed_text = []
 for i, word in enumerate(words):
     if i in blank_indices:
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        # Create a text input for each blank
+        # Use a unique key for each input field
         user_input = st.text_input(f"Blank {len(answer_words)}", key=f"blank_{i}", max_chars=len(stripped), label_visibility="collapsed")
         user_inputs[i] = user_input.strip()
-        st.write(f"**{user_input}**{suffix} ", end="")
+        processed_text.append(f"**{user_input}**{suffix}")
     else:
-        st.write(f"{word} ", end="")
+        processed_text.append(word)
+
+# Join the processed words back into a full text and display it
+st.markdown(" ".join(processed_text))
 
 # Check answers when user submits
 if st.button("Submit"):
