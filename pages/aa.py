@@ -26,38 +26,37 @@ blank_indices = sorted(random.sample(range(len(words)), num_blanks))
 
 # Process words to create blanks and options
 answer_words = []
-processed_words = []
+processed_text = []
 options_list = []
 for i, word in enumerate(words):
     if i in blank_indices:
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        blank = "_____" + suffix
-        processed_words.append(blank)
 
         # Generate options including the correct answer
         options = [stripped] + random.sample(words, 3)  # Include 3 random words as distractors
         random.shuffle(options)
         options_list.append(options)
+
+        # Add a selectbox directly in place of the word
+        selected_word = st.selectbox(f"Select word for blank {i + 1}:", options, key=f"blank_{i}")
+        processed_text.append(selected_word + suffix)
     else:
-        processed_words.append(word)
+        processed_text.append(word)
 
-# Display text with blanks
-st.markdown(" ".join(processed_words))
-
-# Collect user input for each blank
-user_answers = []
-for idx, options in enumerate(options_list):
-    user_answers.append(st.selectbox(f"Select word for blank {idx + 1}:", options))
+# Display processed text with embedded selectboxes
+st.markdown(" ".join(processed_text))
 
 if st.button("Submit"):
     st.subheader("Check Your Answers")
-    for idx, (correct, user) in enumerate(zip(answer_words, user_answers)):
-        if correct.lower() == user.lower():
-            st.markdown(f"✅ **{idx+1}. {user}** (Correct)")
+    score = 0
+    for idx, (correct, selected) in enumerate(zip(answer_words, options_list)):
+        selected_word = st.session_state[f"blank_{blank_indices[idx]}"]
+        if correct.lower() == selected_word.lower():
+            st.markdown(f"✅ **{idx+1}. {selected_word}** (Correct)")
+            score += 1
         else:
-            st.markdown(f"❌ **{idx+1}. {user}** → Correct answer: **{correct}**")
+            st.markdown(f"❌ **{idx+1}. {selected_word}** → Correct answer: **{correct}**")
 
-    score = sum([a.lower() == b.lower() for a, b in zip(answer_words, user_answers)])
     st.success(f"Correct Answers: {score} / {len(answer_words)}")
