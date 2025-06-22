@@ -2,7 +2,7 @@ import streamlit as st
 import random
 
 st.title("Memorization of the Text")
-st.write("Fill in the blanks directly in the passage. If you don't know the word, please leave it empty.")
+st.write("Fill in the blanks directly in the passage below. If you don't know the word, leave it empty.")
 
 # Text passage
 text = """In the small town of Willowby, there stood an old library that was rumored to be enchanted. Every night at midnight, the books inside would whisper stories to each other, bringing their characters to life. One evening, Sarah, a curious 15-year-old book lover, decided to sneak into the library to see if the rumors were true.
@@ -26,24 +26,21 @@ blank_indices = sorted(random.sample(range(len(words)), num_blanks))
 # Process words to create blanks
 answer_words = []
 processed_words = []
+user_answers = []
+
 for i, word in enumerate(words):
     if i in blank_indices:
         stripped = word.strip(".,!?;:")
         suffix = word[len(stripped):]
         answer_words.append(stripped)
-        blank = f"<input id='blank_{i}' style='width: 100px; padding: 2px; margin: 0 2px; border: 1px solid #ccc; border-radius: 4px;' type='text'/>"
-        processed_words.append(f"{blank}{suffix}")
+        user_input = st.text_input(f"Word for blank {len(answer_words)}", key=f"blank_{i}")
+        user_answers.append(user_input.strip())
+        processed_words.append(f"**_{user_input}_**{suffix}")
     else:
         processed_words.append(word)
 
-# Display text with blanks using HTML
-st.markdown(" ".join(processed_words), unsafe_allow_html=True)
-
-# Collect user input for each blank
-user_answers = []
-for i in blank_indices:
-    user_input = st.text_input(f"Word for position {i + 1}", key=f"blank_input_{i}")
-    user_answers.append(user_input.strip())
+# Display text with blanks
+st.markdown(" ".join(processed_words))
 
 # Check answers when user submits
 if st.button("Submit"):
@@ -57,3 +54,4 @@ if st.button("Submit"):
     # Calculate and display the score
     score = sum([correct.lower() == user.lower() for correct, user in zip(answer_words, user_answers)])
     st.success(f"Correct Answers: {score} / {len(answer_words)}")
+
